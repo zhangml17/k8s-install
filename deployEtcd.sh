@@ -3,11 +3,11 @@
 source /usr/local/bin/environment.sh
 
 # 下载和分发etcd二进制文件
-if [ ! -f "./etcd-v3.3.7-linux-amd64.tar.gz" ];then
+if [ ! -f "./packages/etcd-v3.3.7-linux-amd64.tar.gz" ];then
 wget https://github.com/coreos/etcd/releases/download/v3.3.7/etcd-v3.3.7-linux-amd64.tar.gz
-tar -xvf etcd-v3.3.7-linux-amd64.tar.gz
+tar -xvf ./packages/etcd-v3.3.7-linux-amd64.tar.gz
 else
-tar -xvf etcd-v3.3.7-linux-amd64.tar.gz
+tar -xvf./packages/etcd-v3.3.7-linux-amd64.tar.gz
 fi
 
 for node_ip in ${NODE_IPS[@]}
@@ -117,4 +117,15 @@ for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "systemctl status etcd|grep Active"
+  done
+
+# 验证服务状态
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ETCDCTL_API=3 /usr/local/bin/etcdctl \
+    --endpoints=https://${node_ip}:2379 \
+    --cacert=/etc/kubernetes/cert/ca.pem \
+    --cert=/etc/etcd/cert/etcd.pem \
+    --key=/etc/etcd/cert/etcd-key.pem endpoint health
   done
