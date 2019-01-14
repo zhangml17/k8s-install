@@ -7,6 +7,8 @@
 + hostnamectl set-hostname kube-node1
 + hostnamectl set-hostname kube-node2
 + hostnamectl set-hostname kube-node3
-
+<br/>
+修改/etc/hosts文件
+<br/>
 然后执行preready.sh 实现SSH免密登录
 再按步骤执行部署.sh
