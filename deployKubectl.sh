@@ -4,8 +4,13 @@ source /usr/local/bin/environment.sh
 
 # 下载和分发kubectl二进制文件
 cd /home/k8s-install
+
+if [ ! -f "./kubernetes-client-linux-amd64.tar.gz" ];then
 wget https://dl.k8s.io/v1.10.4/kubernetes-client-linux-amd64.tar.gz
 tar -xzvf kubernetes-client-linux-amd64.tar.gz
+else
+tar -xzvf kubernetes-client-linux-amd64.tar.gz
+fi
 
 source /usr/local/bin/environment.sh
 for node_ip in ${NODE_IPS[@]}

@@ -3,8 +3,12 @@
 source /usr/local/bin/environment.sh
 
 # 下载和分发etcd二进制文件
+if [ ! -f "./etcd-v3.3.7-linux-amd64.tar.gz" ];then
 wget https://github.com/coreos/etcd/releases/download/v3.3.7/etcd-v3.3.7-linux-amd64.tar.gz
 tar -xvf etcd-v3.3.7-linux-amd64.tar.gz
+else
+tar -xvf etcd-v3.3.7-linux-amd64.tar.gz
+fi
 
 for node_ip in ${NODE_IPS[@]}
   do
@@ -105,5 +109,12 @@ for node_ip in ${NODE_IPS[@]}
 for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
-    ssh root@${node_ip} "systemctl daemon-reload && systemctl enable etcd && systemctl restart etcd &"
+    ssh root@${node_ip} "systemctl daemon-reload && systemctl enable etcd && systemctl restart etcd"
+  done
+
+# 检查etcd
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status etcd|grep Active"
   done
