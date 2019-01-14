@@ -1,10 +1,10 @@
 #! /bin/bash
 
 # 设置集群机器的SSH免密登录
-#ssh-keygen -t rsa
-#ssh-copy-id root@kube-node1
-#ssh-copy-id root@kube-node2
-#ssh-copy-id root@kube-node3
+ssh-keygen -t rsa
+ssh-copy-id root@kube-node1
+ssh-copy-id root@kube-node2
+ssh-copy-id root@kube-node3
 
 # 设置系统参数
 cat > kubernetes.conf <<EOF
@@ -29,8 +29,8 @@ for node_ip in ${NODE_IPS[@]}
     echo ">>> ${node_ip}"
     scp environment.sh  root@${node_ip}:/usr/local/bin
     ssh root@${node_ip}  "chmod +x /usr/local/bin/*"
-    ssh root@{node_ip}  "sudo setenforce 0"
-    ssh root@{node_ip}  "sudo service dnsmasq stop  &&  sudo systemctl disable dnsmasq"
+    ssh root@${node_ip}  "sudo setenforce 0"
+    ssh root@${node_ip}  "sudo service dnsmasq stop  &&  sudo systemctl disable dnsmasq"
     
     scp kubernetes.conf  root@${node_ip}:/etc/sysctl.d/kubernetes.conf
     ssh root@${node_ip}  "sysctl -p /etc/sysctl.d/kubernetes.conf && mount -t cgroup -o cpu,cpuacct none /sys/fs/cgroup/cpu,cpuacct"
