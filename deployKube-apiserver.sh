@@ -77,39 +77,39 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/kube-apiserver \\
-  --enable-admission-plugins=Initializers,NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \\
-  --anonymous-auth=false \\
-  --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml \\
-  --advertise-address=##NODE_IP## \\
-  --bind-address=##NODE_IP## \\
-  --insecure-port=0 \\
-  --authorization-mode=Node,RBAC \\
-  --runtime-config=api/all \\
-  --enable-bootstrap-token-auth \\
-  --service-cluster-ip-range=${SERVICE_CIDR} \\
-  --service-node-port-range=${NODE_PORT_RANGE} \\
-  --tls-cert-file=/etc/kubernetes/cert/kubernetes.pem \\
-  --tls-private-key-file=/etc/kubernetes/cert/kubernetes-key.pem \\
-  --client-ca-file=/etc/kubernetes/cert/ca.pem \\
-  --kubelet-client-certificate=/etc/kubernetes/cert/kubernetes.pem \\
-  --kubelet-client-key=/etc/kubernetes/cert/kubernetes-key.pem \\
-  --service-account-key-file=/etc/kubernetes/cert/ca-key.pem \\
-  --etcd-cafile=/etc/kubernetes/cert/ca.pem \\
-  --etcd-certfile=/etc/kubernetes/cert/kubernetes.pem \\
-  --etcd-keyfile=/etc/kubernetes/cert/kubernetes-key.pem \\
-  --etcd-servers=${ETCD_ENDPOINTS} \\
-  --enable-swagger-ui=true \\
-  --allow-privileged=true \\
-  --apiserver-count=3 \\
-  --audit-log-maxage=30 \\
-  --audit-log-maxbackup=3 \\
-  --audit-log-maxsize=100 \\
-  --audit-log-path=/var/log/kube-apiserver-audit.log \\
-  --event-ttl=1h \\
-  --alsologtostderr=true \\
-  --logtostderr=false \\
-  --log-dir=/var/log/kubernetes \\
+ExecStart=/usr/local/bin/kube-apiserver \
+  --enable-admission-plugins=Initializers,NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
+  --anonymous-auth=false \
+  --experimental-encryption-provider-config=/etc/kubernetes/encryption-config.yaml \
+  --advertise-address=##NODE_IP## \
+  --bind-address=##NODE_IP## \
+  --insecure-port=0 \
+  --authorization-mode=Node,RBAC \
+  --runtime-config=api/all \
+  --enable-bootstrap-token-auth \
+  --service-cluster-ip-range=${SERVICE_CIDR} \
+  --service-node-port-range=${NODE_PORT_RANGE} \
+  --tls-cert-file=/etc/kubernetes/cert/kubernetes.pem \
+  --tls-private-key-file=/etc/kubernetes/cert/kubernetes-key.pem \
+  --client-ca-file=/etc/kubernetes/cert/ca.pem \
+  --kubelet-client-certificate=/etc/kubernetes/cert/kubernetes.pem \
+  --kubelet-client-key=/etc/kubernetes/cert/kubernetes-key.pem \
+  --service-account-key-file=/etc/kubernetes/cert/ca-key.pem \
+  --etcd-cafile=/etc/kubernetes/cert/ca.pem \
+  --etcd-certfile=/etc/kubernetes/cert/kubernetes.pem \
+  --etcd-keyfile=/etc/kubernetes/cert/kubernetes-key.pem \
+  --etcd-servers=${ETCD_ENDPOINTS} \
+  --enable-swagger-ui=true \
+  --allow-privileged=true \
+  --apiserver-count=3 \
+  --audit-log-maxage=30 \
+  --audit-log-maxbackup=3 \
+  --audit-log-maxsize=100 \
+  --audit-log-path=/var/log/kube-apiserver-audit.log \
+  --event-ttl=1h \
+  --alsologtostderr=true \
+  --logtostderr=false \
+  --log-dir=/var/log/kubernetes \
   --v=2
 Restart=on-failure
 RestartSec=5
@@ -123,7 +123,7 @@ EOF
 # 分发
 for (( i=0; i < 3; i++ ))
   do
-    sed -e "s/##NODE_NAME##/${NODE_NAMES[i]}/" -e "s/##NODE_IP##/${NODE_IPS[i]}/" kube-apiserver.service.template > kube-apiserver-${NODE_IPS[i]}.service 
+    sed -e "s/##NODE_NAME##/${NODE_NAMES[i]}/g" -e "s/##NODE_IP##/${NODE_IPS[i]}/g" kube-apiserver.service.template > kube-apiserver-${NODE_IPS[i]}.service 
   done
 
 for node_ip in ${NODE_IPS[@]}
@@ -138,6 +138,13 @@ for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable kube-apiserver && systemctl restart kube-apiserver"
+  done
+
+# 检查kube-apiserver运行状态
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status kube-apiserver |grep 'Active:'"
   done
 
 # 打印kube-apiserver 写入etcd的数据
