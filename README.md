@@ -16,18 +16,6 @@
 
 从github克隆项目（将项目clone在/home目录下，代码中写死了），然后将预先下载好的组件的安装包拷贝到/k8s-install/packages文件夹下
 
-然后执行preready.sh 实现SSH免密登录等初始化环境操作
-再按步骤执行部署.sh
-+ createCA.sh
-+ deployKubectl.sh
-+ deployEtcd.sh
-+ deployFlannel.sh
-+ deployHaproxy.sh
-+ deployKube-apiserver.sh
-+ deployKube-controller-manager.sh
-+ deployKube-scheduler.sh
-+ deployDocker.sh
-+ deployKubelet.sh
-+ deployKube-proxy.sh
+最后执行 ./install-start.sh 即可
 
 注意： sed -e 进行替换时 s/a/aaa/g 末尾要加g
