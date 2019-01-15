@@ -5,10 +5,16 @@ source /usr/local/bin/environment.sh
 
 # 部署Master节点
 # 下载最新版本的二进制文件
-wget https://dl.k8s.io/v1.10.4/kubernetes-server-linux-amd64.tar.gz
-tar -xzvf kubernetes-server-linux-amd64.tar.gz
-cd kubernetes
-tar -xzvf  kubernetes-src.tar.gz
+if [ ! -f "./packages/kubernetes-server-linux-amd64.tar.gz" ];then
+  wget https://dl.k8s.io/v1.10.4/kubernetes-server-linux-amd64.tar.gz
+  tar -xzvf kubernetes-server-linux-amd64.tar.gz
+  cd kubernetes
+  tar -xzvf  kubernetes-src.tar.gz
+else
+  tar -xzvf ./packages/kubernetes-server-linux-amd64.tar.gz
+  cd kubernetes
+  tar -xzvf  kubernetes-src.tar.gz
+fi
 
 for node_ip in ${NODE_IPS[@]}
   do
@@ -76,6 +82,13 @@ for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable haproxy && systemctl restart haproxy"
+  done
+
+# 检查haproxy服务
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status haproxy|grep Active"
   done
 
 # 配置和下发keepalived文件
@@ -146,4 +159,11 @@ for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable keepalived && systemctl restart keepalived"
+  done
+
+# 检查keepalived服务
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status keepalived|grep Active"
   done
