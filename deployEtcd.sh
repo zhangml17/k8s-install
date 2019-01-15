@@ -4,10 +4,10 @@ source /usr/local/bin/environment.sh
 
 # 下载和分发etcd二进制文件
 if [ ! -f "./packages/etcd-v3.3.7-linux-amd64.tar.gz" ];then
-wget https://github.com/coreos/etcd/releases/download/v3.3.7/etcd-v3.3.7-linux-amd64.tar.gz
-tar -xvf ./packages/etcd-v3.3.7-linux-amd64.tar.gz
+  wget https://github.com/coreos/etcd/releases/download/v3.3.7/etcd-v3.3.7-linux-amd64.tar.gz
+  tar -xvf etcd-v3.3.7-linux-amd64.tar.gz
 else
-tar -xvf./packages/etcd-v3.3.7-linux-amd64.tar.gz
+  tar -xvf ./packages/etcd-v3.3.7-linux-amd64.tar.gz
 fi
 
 for node_ip in ${NODE_IPS[@]}
