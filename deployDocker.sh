@@ -13,8 +13,12 @@ for node_ip in ${NODE_IPS[@]}
 
 # 部署docker组件
 # 下载和分发 docker 二进制文件
-wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz
-tar -xvf docker-18.03.1-ce.tgz
+if [ ! -f "./packages/docker-18.03.1-ce.tgz" ];then
+  wget https://download.docker.com/linux/static/stable/x86_64/docker-18.03.1-ce.tgz
+  tar -xvf docker-18.03.1-ce.tgz
+else
+  tar -xvf ./packages/docker-18.03.1-ce.tgz   
+fi
 
 for node_ip in ${NODE_IPS[@]}
   do
@@ -47,7 +51,9 @@ WantedBy=multi-user.target
 EOF
 
 for node_ip in ${NODE_IPS[@]}
-  do echo ">>> ${node_ip}" scp docker.service root@${node_ip}:/etc/systemd/system/
+  do 
+    echo ">>> ${node_ip}" 
+    scp docker.service root@${node_ip}:/etc/systemd/system/
   done
 
 # 配置和分发docker配置文件
