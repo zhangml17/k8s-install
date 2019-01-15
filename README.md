@@ -26,3 +26,5 @@
 + deployDocker.sh
 + deployKubelet.sh
 + deployKube-proxy.sh
+
+注意： sed -e 进行替换时 s/a/aaa/g 末尾要加g
