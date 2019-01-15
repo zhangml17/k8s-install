@@ -1,6 +1,7 @@
 + 以root用户安装k8s
 + 可执行文件路径为/usr/local/bin
 + MASTER_VIP必须和节点IP在同一个网段
++ VIP_IF 根据实际网卡情况设置
 
 # 准备工作
 事先设置好集群机器的主机名
