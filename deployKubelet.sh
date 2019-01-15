@@ -85,7 +85,7 @@ EOF
 for node_ip in ${NODE_IPS[@]}
   do 
     echo ">>> ${node_ip}"
-    sed -e "s/##NODE_IP##/${node_ip}/" kubelet.config.json.template > kubelet.config-${node_ip}.json
+    sed -e "s/##NODE_IP##/${node_ip}/g" kubelet.config.json.template > kubelet.config-${node_ip}.json
     scp kubelet.config-${node_ip}.json root@${node_ip}:/etc/kubernetes/kubelet.config.json
   done
 
@@ -121,7 +121,7 @@ EOF
 for node_name in ${NODE_NAMES[@]}
   do 
     echo ">>> ${node_name}"
-    sed -e "s/##NODE_NAME##/${node_name}/" kubelet.service.template > kubelet-${node_name}.service
+    sed -e "s/##NODE_NAME##/${node_name}/g" kubelet.service.template > kubelet-${node_name}.service
     scp kubelet-${node_name}.service root@${node_name}:/etc/systemd/system/kubelet.service
   done
 
