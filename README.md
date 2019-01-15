@@ -12,6 +12,9 @@
 + 192.168.100.31  kube-node1    kube-node1
 + 192.168.100.32  kube-node2    kube-node2
 + 192.168.100.33  kube-node3    kube-node3
++ hostnamectl set-hostname kube-node1
++ hostnamectl set-hostname kube-node2
++ hostnamectl set-hostname kube-node3
 <br/>
 然后执行preready.sh 实现SSH免密登录等初始化环境操作
 再按步骤执行部署.sh<br/>
