@@ -95,3 +95,10 @@ for node_ip in ${NODE_IPS[@]}
     ssh root@${node_ip} "mkdir -p /var/log/kubernetes"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable kube-scheduler && systemctl restart kube-scheduler"
   done
+
+# 检查服务运行状态
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status kube-scheduler|grep Active"
+  done
