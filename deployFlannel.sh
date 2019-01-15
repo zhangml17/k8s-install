@@ -5,8 +5,13 @@ source /usr/local/bin/environment.sh
 
 # 下载和分发二进制文件
 mkdir flannel
-wget https://github.com/coreos/flannel/releases/download/v0.10.0/flannel-v0.10.0-linux-amd64.tar.gz
-tar -xzvf flannel-v0.10.0-linux-amd64.tar.gz -C flannel
+
+if [ ! -f "./packages/flannel-v0.10.0-linux-amd64.tar.gz" ];then
+  wget https://github.com/coreos/flannel/releases/download/v0.10.0/flannel-v0.10.0-linux-amd64.tar.gz
+  tar -xzvf ./packages/flannel-v0.10.0-linux-amd64.tar.gz -C flannel
+else
+  tar -xzvf ./packages/flannel-v0.10.0-linux-amd64.tar.gz -C flannel
+fi
 
 for node_ip in ${NODE_IPS[@]}
   do
@@ -70,12 +75,12 @@ Before=docker.service
 
 [Service]
 Type=notify
-ExecStart=/usr/local/bin/flanneld \\
-  -etcd-cafile=/etc/kubernetes/cert/ca.pem \\
-  -etcd-certfile=/etc/flanneld/cert/flanneld.pem \\
-  -etcd-keyfile=/etc/flanneld/cert/flanneld-key.pem \\
-  -etcd-endpoints=${ETCD_ENDPOINTS} \\
-  -etcd-prefix=${FLANNEL_ETCD_PREFIX} \\
+ExecStart=/usr/local/bin/flanneld \
+  -etcd-cafile=/etc/kubernetes/cert/ca.pem \
+  -etcd-certfile=/etc/flanneld/cert/flanneld.pem \
+  -etcd-keyfile=/etc/flanneld/cert/flanneld-key.pem \
+  -etcd-endpoints=${ETCD_ENDPOINTS} \
+  -etcd-prefix=${FLANNEL_ETCD_PREFIX} \
   -iface=${IFACE}
 ExecStartPost=/usr/local/bin/mk-docker-opts.sh -k DOCKER_NETWORK_OPTIONS -d /run/flannel/docker
 Restart=on-failure
@@ -97,4 +102,11 @@ for node_ip in ${NODE_IPS[@]}
   do
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable flanneld && systemctl restart flanneld"
+  done
+
+# 检查启动结果
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status flanneld|grep Active"
   done
