@@ -8,7 +8,7 @@ mkdir flannel
 
 if [ ! -f "./packages/flannel-v0.10.0-linux-amd64.tar.gz" ];then
   wget https://github.com/coreos/flannel/releases/download/v0.10.0/flannel-v0.10.0-linux-amd64.tar.gz
-  tar -xzvf ./packages/flannel-v0.10.0-linux-amd64.tar.gz -C flannel
+  tar -xzvf flannel-v0.10.0-linux-amd64.tar.gz -C flannel
 else
   tar -xzvf ./packages/flannel-v0.10.0-linux-amd64.tar.gz -C flannel
 fi
