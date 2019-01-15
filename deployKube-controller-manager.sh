@@ -74,7 +74,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/usr/local/bin/kube-controller-manager \
-  --address=172.0.0.1 \
+  --address=127.0.0.1 \
   --kubeconfig=/etc/kubernetes/kube-controller-manager.kubeconfig \
   --service-cluster-ip-range=${SERVICE_CIDR} \
   --cluster-name=kubernetes \
@@ -115,4 +115,11 @@ for node_ip in ${NODE_IPS[@]}
     echo ">>> ${node_ip}"
     ssh root@${node_ip} "mkdir -p /var/log/kubernetes"
     ssh root@${node_ip} "systemctl daemon-reload && systemctl enable kube-controller-manager && systemctl restart kube-controller-manager"
+  done
+
+# 检查服务运行状态
+for node_ip in ${NODE_IPS[@]}
+  do
+    echo ">>> ${node_ip}"
+    ssh root@${node_ip} "systemctl status kube-controller-manager|grep Active"
   done
