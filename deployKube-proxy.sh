@@ -72,7 +72,7 @@ EOF
 for (( i=0; i < 3; i++ ))
   do 
     echo ">>> ${NODE_NAMES[i]}"
-    sed -e "s/##NODE_NAME##/${NODE_NAMES[i]}/" -e "s/##NODE_IP##/${NODE_IPS[i]}/" kube-proxy.config.yaml.template > kube-proxy-${NODE_NAMES[i]}.config.yaml
+    sed -e "s/##NODE_NAME##/${NODE_NAMES[i]}/g" -e "s/##NODE_IP##/${NODE_IPS[i]}/g" kube-proxy.config.yaml.template > kube-proxy-${NODE_NAMES[i]}.config.yaml
     scp kube-proxy-${NODE_NAMES[i]}.config.yaml root@${NODE_NAMES[i]}:/etc/kubernetes/kube-proxy.config.yaml
   done
 
