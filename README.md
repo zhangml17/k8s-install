@@ -4,6 +4,8 @@
 + VIP_IF 根据实际网卡情况设置
 
 # 准备工作
++ 按照自己实际情况修改./scripts/environment.sh脚本中的变量设置
+
 事先设置好集群机器的主机名
 + hostnamectl set-hostname kube-node1
 + hostnamectl set-hostname kube-node2
