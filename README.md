@@ -16,7 +16,7 @@
 + 192.168.100.32  kube-node2    kube-node2
 + 192.168.100.33  kube-node3    kube-node3
 
-从github克隆项目（将项目clone在/home目录下，代码中写死了），然后将预先下载好的组件的安装包拷贝到/k8s-install/packages文件夹下
+从github克隆项目(因为有几个安装包，所以可能有点慢)，然后将预先下载好的组件的安装包（kubernetes-server-linux-amd64.tar.gz）拷贝到/k8s-install/packages文件夹下
 
 最后执行 ./install-start.sh 即可
 
