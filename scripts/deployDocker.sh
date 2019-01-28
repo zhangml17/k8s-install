@@ -60,6 +60,7 @@ for node_ip in ${NODE_IPS[@]}
 cat > docker-daemon.json <<EOF
 {
     "registry-mirrors": ["https://hub-mirror.c.163.com", "https://docker.mirrors.ustc.edu.cn"],
+    "insecure-registries":["192.168.0.0/16","10.0.0.0/8","172.0.0.0/8"],
     "max-concurrent-downloads": 20
 }
 EOF
